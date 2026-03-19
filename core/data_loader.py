@@ -19,6 +19,10 @@ from pathlib import Path
 from typing import Any, Optional
 
 import openpyxl
+from dotenv import load_dotenv
+
+load_dotenv()
+_DEFAULT_DATA_DIR = os.path.expanduser(os.getenv("DATA_DIR", "data"))
 
 from core.bbox_parser import parse_bbox
 
@@ -159,7 +163,9 @@ def _val(v: Any) -> Optional[str]:
 # Main loader
 # ---------------------------------------------------------------------------
 
-def load_all(data_dir: str = "data") -> dict[str, dict]:
+def load_all(data_dir: str = None) -> dict[str, dict]:
+    if data_dir is None:
+        data_dir = _DEFAULT_DATA_DIR
     """
     Load and merge all XLSX files. Populates global SAMPLES dict.
     Returns the SAMPLES dict.
