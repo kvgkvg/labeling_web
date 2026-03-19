@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>VQA Labeling Tool</title>
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ── Header ─────────────────────────────────────────────── -->
+  <header id="header">
+    <div class="hdr-left">
+      <span class="hdr-logo">VQA Label</span>
+      <span id="sample-id" class="hdr-sample">—</span>
+      <span id="dataset-name" class="hdr-dataset">—</span>
+    </div>
+
+    <div class="hdr-center">
+      <div id="progress-wrap">
+        <div id="progress-bar"></div>
+      </div>
+      <span id="progress-text" class="hdr-progress">—</span>
+    </div>
+
+    <div class="hdr-right">
+      <select id="dataset-filter" title="Filter by dataset">
+        <option value="">All datasets</option>
+      </select>
+      <span id="user-display">
+        <span class="hdr-label">User:</span>
+        <span id="user-id-display">—</span>
+      </span>
+      <button id="btn-next-sample" class="btn-header">Next ›</button>
+    </div>
+  </header>
+
+  <!-- ── Main layout ───────────────────────────────────────── -->
+  <div id="main">
+
+    <!-- Left panel (40%) -->
+    <div id="left-panel">
+
+      <div id="status-banner" class="hidden"></div>
+
+      <!-- Part 1: MCQ -->
+      <div class="card" id="part1">
+        <div class="card-hdr">
+          <span class="part-num">1</span>
+          MCQ Answer
+        </div>
+        <div class="card-body">
+          <div id="question-text" class="question-text"></div>
+          <div id="choices-list" class="choices-list"></div>
+          <div class="meta-row">
+            <span class="meta-label">Model answer</span>
+            <span id="mcq-answer" class="ans-badge">—</span>
+            <span class="meta-label meta-sep">Ground truth</span>
+            <span id="groundtruth-answer" class="ans-badge ans-gt">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 2: Bounding Box -->
+      <div class="card" id="part2">
+        <div class="card-hdr">
+          <span class="part-num">2</span>
+          Bounding Box
+        </div>
+        <div class="card-body">
+          <div class="meta-row">
+            <span class="meta-label">Bbox correct</span>
+            <span id="badge-bbox-correct" class="badge badge-unknown">—</span>
+            <span class="meta-sep"></span>
+            <span class="meta-label">Bbox answer</span>
+            <span id="bbox-answer-display" class="ans-badge">—</span>
+            <button id="bbox-answer-true"  class="verdict-btn" title="Bbox answer is correct">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+            </button>
+            <button id="bbox-answer-false" class="verdict-btn" title="Bbox answer is incorrect">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+            </button>
+          </div>
+          <div class="field-label-row">Visual Reasoning</div>
+          <textarea id="visual-reasoning-text" class="reasoning-ta"
+                    placeholder="(no visual reasoning)"></textarea>
+          <div class="btn-row">
+            <button id="btn-reset-visual-reasoning" class="btn-sm">↺ Reset</button>
+            <span id="badge-visual-reasoning-correct" class="badge badge-unknown">—</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Part 3: Reasoning -->
+      <div class="card" id="part3">
+        <div class="card-hdr">
+          <span class="part-num">3</span>
+          Reasoning
+        </div>
+        <div class="card-body">
+          <div class="meta-row">
+            <span class="meta-label">Reasoning correct</span>
+            <span id="badge-reasoning-correct" class="badge badge-unknown">—</span>
+            <span class="meta-sep"></span>
+            <span class="meta-label">Reason answer</span>
+            <span id="reason-answer-display" class="ans-badge">—</span>
+            <span id="badge-reason-answer-changed" class="badge badge-unknown">—</span>
+          </div>
+          <div class="field-label-row">Chain of Thought</div>
+          <textarea id="reasoning-text" class="reasoning-ta"
+                    placeholder="(no reasoning)"></textarea>
+          <div class="btn-row">
+            <button id="btn-reset-reasoning" class="btn-sm">↺ Reset</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action bar -->
+      <div id="action-bar">
+        <button id="btn-save" class="btn-primary" disabled>Save &amp; Next</button>
+        <button id="btn-skip" class="btn-secondary" disabled>Skip</button>
+      </div>
+    </div>
+
+    <!-- Right panel (60%) -->
+    <div id="right-panel">
+
+      <!-- Image tabs (shown only when sample has >1 image) -->
+      <div id="image-tabs" style="display:none"></div>
+
+      <!-- Canvas viewer -->
+      <div id="canvas-container">
+        <canvas id="viewer-canvas"></canvas>
+      </div>
+
+      <!-- Toolbar -->
+      <div id="toolbar">
+        <button id="tool-pan"    class="tool-btn active" title="Pan [P]">Pan</button>
+        <button id="tool-draw"   class="tool-btn"        title="Draw GT bbox [D]">Draw</button>
+        <button id="tool-delete" class="tool-btn"        title="Delete selected [Del]">Delete</button>
+        <button id="tool-clear"  class="tool-btn"        title="Clear all GT bboxes">Clear GT</button>
+        <span class="tool-sep"></span>
+        <button id="tool-zoom-in"  class="tool-btn" title="Zoom in [+]">+</button>
+        <button id="tool-zoom-out" class="tool-btn" title="Zoom out [−]">−</button>
+        <button id="tool-fit"      class="tool-btn" title="Fit to view [F]">Fit</button>
+        <span class="tool-sep"></span>
+        <span id="bbox-count-display" class="tool-info">0 GT bboxes</span>
+        <span class="tool-sep"></span>
+        <span class="tool-hint">D=Draw · P=Pan · F=Fit · Del=Delete</span>
+      </div>
+    </div>
+
+  </div><!-- /main -->
+
+  <!-- ── User-ID modal ─────────────────────────────────────── -->
+  <div id="user-modal" class="modal-overlay">
+    <div class="modal-box">
+      <div class="modal-title">VQA Labeling Tool</div>
+      <p class="modal-sub">Enter your user ID to begin</p>
+      <input id="user-id-input" type="text" class="modal-input"
+             placeholder="e.g. alice" autocomplete="off" autofocus>
+      <button id="user-id-submit" class="btn-primary">Start Labeling</button>
+    </div>
+  </div>
+
+  <!-- ── Toast container ───────────────────────────────────── -->
+  <div id="toast-container"></div>
+
+</div><!-- /app -->
+<script src="/static/app.js"></script>
+</body>
+</html>
