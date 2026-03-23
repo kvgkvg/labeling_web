@@ -113,17 +113,7 @@ body {
 .hdr-label { color: var(--muted); font-size: 11px; }
 #user-id-display { font-weight: 600; color: var(--accent); font-size: 12px; }
 
-#dataset-filter {
-  background: var(--card);
-  border: 1px solid var(--border);
-  color: var(--text);
-  border-radius: var(--radius-sm);
-  padding: 3px 6px;
-  font-size: 11px;
-  cursor: pointer;
-  max-width: 160px;
-}
-#dataset-filter:focus { outline: 1px solid var(--accent); }
+#dataset-filter { display: none; }
 
 .btn-header {
   background: var(--accent);

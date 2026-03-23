@@ -41,6 +41,9 @@ const state = {
 
   // Timers
   heartbeatTimer: null,
+
+  // Session-skipped sample IDs (reset on page load)
+  skippedIds: [],
 };
 
 // ============================================================
@@ -137,6 +140,7 @@ async function apiFetch(url, opts = {}) {
 async function apiLoadNext() {
   const p = new URLSearchParams({ user_id: state.userId });
   if (state.datasetFilter) p.set('dataset', state.datasetFilter);
+  if (state.skippedIds.length) p.set('exclude', state.skippedIds.join(','));
   const data = await apiFetch(`/api/samples/next?${p}`);
   return data.sample;
 }
@@ -784,6 +788,7 @@ async function saveAndNext() {
 async function skipSample() {
   if (!state.currentSample) return;
   const id = state.currentSample.id;
+  if (!state.skippedIds.includes(id)) state.skippedIds.push(id);
   setActionsEnabled(false);
   stopHeartbeat();
   clearViewer();

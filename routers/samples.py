@@ -86,6 +86,7 @@ def list_all_samples(
 def get_next_sample(
     user_id: str = Query(..., description="Labeler user ID"),
     dataset: str = Query(None, description="Restrict to a specific dataset"),
+    exclude: str = Query(None, description="Comma-separated sample IDs to skip"),
 ):
     """
     Return next valid, unlabeled, unlocked sample for user_id.
@@ -93,6 +94,7 @@ def get_next_sample(
     """
     samples = data_loader.list_samples()
     labeled_ids = _build_labeled_set()
+    excluded_ids = set(exclude.split(',')) if exclude else set()
 
     for sample in samples.values():
         if not sample["is_valid"]:
@@ -102,6 +104,8 @@ def get_next_sample(
 
         sid = sample["id"]
         if sid in labeled_ids:
+            continue
+        if sid in excluded_ids:
             continue
 
         # Check lock
