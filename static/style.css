@@ -193,6 +193,33 @@ body {
   text-transform: uppercase;
   border-bottom: 1px solid var(--border);
 }
+.info-icon {
+  font-size: 13px;
+  color: var(--muted);
+  cursor: default;
+  margin-left: 3px;
+  line-height: 1;
+  vertical-align: middle;
+}
+.info-icon:hover { color: var(--accent); }
+#info-tooltip {
+  position: fixed;
+  z-index: 9999;
+  background: #1a1a2e;
+  color: var(--text);
+  font-size: 11px;
+  font-weight: 400;
+  letter-spacing: 0;
+  text-transform: none;
+  line-height: 1.5;
+  padding: 8px 12px;
+  border-radius: var(--radius);
+  border: 1px solid var(--border);
+  width: 240px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.5);
+  pointer-events: none;
+  display: none;
+}
 .part-num {
   display: inline-flex;
   align-items: center;

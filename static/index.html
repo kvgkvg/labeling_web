@@ -49,14 +49,17 @@
         <div class="card-hdr">
           <span class="part-num">1</span>
           MCQ Answer
+          <span class="info-icon" data-tooltip="Compare the model's selected answer against the ground truth. Check if the model chose the correct multiple-choice option.">&#9432;</span>
         </div>
         <div class="card-body">
           <div id="question-text" class="question-text"></div>
           <div id="choices-list" class="choices-list"></div>
           <div class="meta-row">
-            <span class="meta-label">Model answer</span>
+            <span class="meta-label">Model answer <span class="info-icon" data-tooltip="The answer selected by the model from the multiple-choice options.">&#9432;</span></span>
             <span id="mcq-answer" class="ans-badge">—</span>
-            <span class="meta-label meta-sep">Ground truth</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Ground truth <span class="info-icon" data-tooltip="The correct answer for this question. Compare against the model answer to judge correctness.">&#9432;</span></span>
             <span id="groundtruth-answer" class="ans-badge ans-gt">—</span>
           </div>
         </div>
@@ -67,13 +70,15 @@
         <div class="card-hdr">
           <span class="part-num">2</span>
           Bounding Box
+          <span class="info-icon" data-tooltip="Evaluate whether the model's bounding boxes correctly localize the relevant regions (IoU-based). Also judge if the bbox-derived answer is correct, and review/edit the visual reasoning.">&#9432;</span>
         </div>
         <div class="card-body">
           <div class="meta-row">
-            <span class="meta-label">Bbox correct</span>
+            <span class="meta-label">Bbox correct <span class="info-icon" data-tooltip="Auto-computed via IoU between model bboxes and ground truth bboxes. True if IoU exceeds the threshold.">&#9432;</span></span>
             <span id="badge-bbox-correct" class="badge badge-unknown">—</span>
-            <span class="meta-sep"></span>
-            <span class="meta-label">Bbox answer</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Bbox answer <span class="info-icon" data-tooltip="The answer derived from the model's bounding box output. Use ✓/✗ to manually judge whether this answer is correct.">&#9432;</span></span>
             <span id="bbox-answer-display" class="ans-badge">—</span>
             <button id="bbox-answer-true"  class="verdict-btn" title="Bbox answer is correct">
               <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
@@ -97,13 +102,15 @@
         <div class="card-hdr">
           <span class="part-num">3</span>
           Reasoning
+          <span class="info-icon" data-tooltip="Review the model's chain-of-thought reasoning. Edit if needed, then check whether the reasoning is correct and consistent with the final answer.">&#9432;</span>
         </div>
         <div class="card-body">
           <div class="meta-row">
-            <span class="meta-label">Reasoning correct</span>
+            <span class="meta-label">Reasoning correct <span class="info-icon" data-tooltip="Auto-detected: whether the model's chain-of-thought reasoning changed from the original. Review and edit the reasoning below if needed.">&#9432;</span></span>
             <span id="badge-reasoning-correct" class="badge badge-unknown">—</span>
-            <span class="meta-sep"></span>
-            <span class="meta-label">Reason answer</span>
+          </div>
+          <div class="meta-row">
+            <span class="meta-label">Reason answer <span class="info-icon" data-tooltip="The answer extracted from the model's reasoning chain. Shown alongside a consistency badge indicating if it matches the MCQ answer.">&#9432;</span></span>
             <span id="reason-answer-display" class="ans-badge">—</span>
             <span id="badge-reason-answer-changed" class="badge badge-unknown">—</span>
           </div>
@@ -166,6 +173,9 @@
 
   <!-- ── Toast container ───────────────────────────────────── -->
   <div id="toast-container"></div>
+
+  <!-- ── Info tooltip ──────────────────────────────────────── -->
+  <div id="info-tooltip"></div>
 
 </div><!-- /app -->
 <script src="/static/app.js"></script>
