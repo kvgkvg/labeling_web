@@ -201,11 +201,12 @@ body {
   font-weight: 400;
   letter-spacing: 0;
   text-transform: none;
-  line-height: 1.5;
-  padding: 8px 12px;
+  line-height: 1.6;
+  padding: 10px 14px;
   border-radius: var(--radius);
   border: 1px solid var(--border);
-  width: 240px;
+  width: 320px;
+  white-space: pre-wrap;
   box-shadow: 0 4px 16px rgba(0,0,0,0.5);
   pointer-events: none;
   display: none;

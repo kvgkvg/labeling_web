@@ -70,7 +70,7 @@
         <div class="card-hdr">
           <span class="part-num">2</span>
           Bounding Box
-          <span class="info-icon" data-tooltip="Evaluate whether the model's bounding boxes correctly localize the relevant regions (IoU-based). Also judge if the bbox-derived answer is correct, and review/edit the visual reasoning.">&#9432;</span>
+          <span class="info-icon" data-tooltip="Step 1: Identify ALL target objects the question requires&#10;  1.1 Read the question — what is really being asked (color, count, location)?&#10;  1.2 List every object/region needed to answer accurately.&#10;  1.3 State briefly why each object is necessary.&#10;&#10;Step 2: Localize the identified objects&#10;  · 1-sentence scene summary.&#10;  · For each object: rough position + key visual feature (1 phrase).&#10;  · Ensure distinct positions — no identical locations for different objects.&#10;&#10;Step 3: Output bounding boxes and answer&#10;  · Per object: unique box on 0–1000 scale [x_min, y_min, x_max, y_max] {label}.&#10;  · Boxes must be tight and accurate.&#10;  · All boxes MUST be distinct (overlap &lt; 80%); adjust or merge if very close.&#10;  · Use empty list if no relevant object.&#10;  · Give the precise answer based only on localized regions — no guessing.">&#9432;</span>
         </div>
         <div class="card-body">
           <div class="meta-row">
@@ -102,7 +102,7 @@
         <div class="card-hdr">
           <span class="part-num">3</span>
           Reasoning
-          <span class="info-icon" data-tooltip="Review the model's chain-of-thought reasoning. Edit if needed, then check whether the reasoning is correct and consistent with the final answer.">&#9432;</span>
+          <span class="info-icon" data-tooltip="Step 1: Key visual observation from the image&#10;Step 2: Derived rule or pattern governing the transformation&#10;Step 3: Application of the rule to the given options&#10;Step 4: Elimination or confirmation logic&#10;Step 5: Final confirmation of correctness">&#9432;</span>
         </div>
         <div class="card-body">
           <div class="meta-row">

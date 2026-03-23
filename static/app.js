@@ -1004,21 +1004,29 @@ function init() {
 document.addEventListener('DOMContentLoaded', init);
 
 // ── Info icon tooltip ─────────────────────────────────────────
-document.addEventListener('DOMContentLoaded', () => {
-  const tip = document.getElementById('info-tooltip');
-  document.querySelectorAll('.info-icon').forEach(icon => {
-    icon.addEventListener('mouseenter', () => {
-      tip.textContent = icon.dataset.tooltip || '';
-      tip.style.display = 'block';
-      const r = icon.getBoundingClientRect();
-      let left = r.left + r.width / 2 - 120;
-      let top  = r.bottom + 6;
-      left = Math.max(8, Math.min(left, window.innerWidth - 248));
-      tip.style.left = left + 'px';
-      tip.style.top  = top  + 'px';
-    });
-    icon.addEventListener('mouseleave', () => {
-      tip.style.display = 'none';
-    });
+(function () {
+  const TIP_W = 320;
+  let tip;
+
+  function showTip(icon) {
+    if (!tip) tip = document.getElementById('info-tooltip');
+    tip.textContent = icon.dataset.tooltip || '';
+    const r    = icon.getBoundingClientRect();
+    let   left = r.left + r.width / 2 - TIP_W / 2;
+    let   top  = r.bottom + 8;
+    left = Math.max(8, Math.min(left, window.innerWidth - TIP_W - 8));
+    if (top + 120 > window.innerHeight) top = r.top - 8 - 120;
+    tip.style.left    = left + 'px';
+    tip.style.top     = top  + 'px';
+    tip.style.display = 'block';
+  }
+
+  function hideTip() {
+    if (tip) tip.style.display = 'none';
+  }
+
+  document.addEventListener('mouseover', e => {
+    const icon = e.target.closest('.info-icon');
+    if (icon) showTip(icon); else hideTip();
   });
-});
+}());

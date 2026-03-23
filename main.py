@@ -21,7 +21,7 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
 
@@ -33,6 +33,14 @@ logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(name
 logger = logging.getLogger(__name__)
 
 app = FastAPI(title="VQA Labeling Tool", version="1.0.0")
+
+
+@app.middleware("http")
+async def no_cache_static(request: Request, call_next):
+    response = await call_next(request)
+    if request.url.path.startswith("/static") or request.url.path == "/":
+        response.headers["Cache-Control"] = "no-store"
+    return response
 
 
 # ---------------------------------------------------------------------------
@@ -106,7 +114,10 @@ if STATIC_DIR.exists():
 
     @app.get("/")
     async def index():
-        return FileResponse(str(STATIC_DIR / "index.html"))
+        return FileResponse(
+            str(STATIC_DIR / "index.html"),
+            headers={"Cache-Control": "no-store"},
+        )
 
     @app.get("/{full_path:path}")
     async def spa_fallback(full_path: str):
